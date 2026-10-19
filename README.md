@@ -3,7 +3,7 @@
 Native SwiftUI Xcode project for macOS 13+, with an English interface.
 Windows UEFI installation media and direct Linux hybrid ISO writing.
 
-## Build and run — no Homebrew
+## Build and run
 
 1. Open `USBForge.xcodeproj` in Xcode.
 2. Select **USBForge → My Mac**, and a signing team if needed.
@@ -12,19 +12,7 @@ Windows UEFI installation media and direct Linux hybrid ISO writing.
 5. Select a USB device, check its name, capacity and disk identifier, and click **Write USB…** and confirm erasure with **YES** (or return with **NO**).
 6. Authorize through macOS and keep the app open and the Mac awake until verification and ejection finish.
 
-If replacing a previous revision after a build failure, use **Product → Clean Build Folder** (Shift–⌘K), then build again. Project folders may contain spaces. The build script invokes its local configure shim through `/bin/sh`, so extracted ZIP executable permissions do not affect it.
-
-Builds use only Apple's Xcode toolchain and system build utilities. No Homebrew, MacPorts, separately installed wimlib, pkg-config, autotools or Swift packages are needed. The original wimlib 1.14.5 source archive is included in `Vendor/`, and Xcode builds and bundles the executable automatically. See `Vendor/NOTICE.md` for provenance and licenses.
-
 Build on the Mac where the app will run: both helper executables currently target the build host architecture, Apple Silicon or Intel. A universal distribution is not provided.
-
-## English, fixed interface
-
-The content area is fixed at 760 × 700 points. There is no main scroll view and the window cannot be resized. Mode, image, destination, progress, status and Write USB controls have permanently allocated rows. Switching modes, selecting a long filename or USB name, receiving a lengthy error, or starting progress does not insert rows or move the Write USB button.
-
-The Windows-only bypass checkbox remains in place but is disabled in Linux mode. Filenames and device names use a single truncated line with the complete value available in a tooltip. The progress area is always present, initially showing Ready. Only the status text scrolls inside its fixed area; its **Copy diagnostics** button copies the underlying technical error for troubleshooting. The status and error dialog show a short explanation of likely causes. The confirmation dialog also has fixed dimensions.
-
-This layout was checked in the running app in Windows and Linux modes. A detached layout harness also measured the same 760 × 700 fitting size for idle, Linux and simulated writing states with long filenames and diagnostics. No USB write was performed during these UI checks.
 
 ## Live progress and app icon
 
@@ -34,10 +22,6 @@ A progress panel occupies a permanent fixed row above Status. It shows the curre
 - Linux: actual bytes written, followed by a separate read-back verification stage.
 - Windows: aggregate copying and verification progress for regular files, followed by wimlib split and verification percentages for a large WIM.
 - Authorization, mounting, formatting, flushing and ejecting: indeterminate activity until the system operation finishes. No fabricated percentage or ETA is shown.
-
-The helper appends throttled JSON progress events to a pre-created private channel; the GUI reads it every 200 ms. Errors stop the progress display and show a short, actionable message; technical details remain available through Copy diagnostics. Completion is shown only after successful ejection.
-
-The original USB-and-write-arrow artwork is in `Assets.xcassets/AppIcon.appiconset`, including all ten standard macOS icon sizes. It is configured as the app icon for Debug and Release. Regenerate with `swift Scripts/generate-icon.swift .` from the project directory.
 
 ## Windows
 
